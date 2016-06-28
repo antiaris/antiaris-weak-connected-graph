@@ -1,0 +1,29 @@
+{
+    "name": "antiaris-weak-connected-graph",
+    "version": "0.1.0",
+    "description": "任意依赖拓扑图谱下的静态资源文件名加戳",
+    "main": "index.js",
+    "directories": {
+        "test": "test"
+    },
+    "scripts": {
+        "test": "eslint index.js && mocha"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/antiaris/antiaris-weak-connected-graph.git"
+    },
+    "engines": {
+        "node": ">=6.0.0"
+    },
+    "keywords": [
+        "antiaris",
+        "weak",
+        "connected-graph"
+    ],
+    "author": "yanni4night@gmail.com",
+    "license": "Apache-2.0",
+    "bugs": {
+        "url": "https://github.com/antiaris/antiaris-weak-connected-graph/issues"
+    }
+}
