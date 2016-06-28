@@ -20,11 +20,16 @@ const md5 = content => {
 class Node {
     constructor(name, ...dependencies) {
         this.name = name;
-        this.content = name; // mock
-        this.dependencies = [...dependencies];
+        this.content = '';
+        this.dependencies = [];
+        this.append(...dependencies);
     }
-    append(dependency) {
-        this.dependencies.push(dependency);
+    append(...dependencies) {
+        this.dependencies.push(...dependencies);
+        this.content = this.dependencies.map(dependency => `{${dependency.name}}`).join();
+    }
+    replace(name, replaced) {
+        this.content = this.content.replace(`{${name}}`, `{${replaced}}`);
     }
 }
 
@@ -46,12 +51,15 @@ const walkNode = (node, map, nameMap, path) => {
         path.pop();
     }
 
-    if (!nameMap.has(node.name)) {
-        nameMap.set(node.name, node.name + '_c_' + md5(node.content));
+    if (!map.has(node.name)) {
+        node.dependencies.forEach(dependency => {
+            node.replace(dependency.name, nameMap.get(dependency.name));
+        });
+        map.set(node.name, node.content);
     }
 
-    if (!map.has(node.name)) {
-        map.set(node.name, /*mock content*/ node.dependencies.map(n => nameMap.get(n.name)));
+    if (!nameMap.has(node.name)) {
+        nameMap.set(node.name, node.name + '_c_' + md5(node.content));
     }
 };
 
@@ -66,7 +74,10 @@ const walk = (...nodes) => {
     const ret = new Map();
 
     map.forEach((value, key) => {
-        ret.set(nameMap.get(key), value);
+        ret.set(key, {
+            name: nameMap.get(key),
+            content: value
+        });
     });
 
     return ret;
